@@ -1,0 +1,13 @@
+"use strict";
+let objects = {};
+objects.app = require('./src/app');
+objects.amis = require('./src/amis');
+objects.auth = require('./src/auth');
+objects.config = require('./src/config');
+objects.logger = require('./src/logger');
+objects.model = require('./src/model');
+objects.router = require('./src/router');
+objects.secret = require('./src/secret');
+objects.repository = require('./src/repository');
+objects.controller = require('./src/controller');
+module.exports = objects;

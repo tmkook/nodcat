@@ -1,0 +1,24 @@
+{
+  "name": "nodcat",
+  "version": "1.0.0",
+  "description": "node framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "keywords": [
+    "dcat",
+    "nodcat",
+    "framework"
+  ],
+  "author": "tmkook",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "cookie-parser": "^1.4.6",
+    "crypto-js": "^4.2.0",
+    "express": "^4.19.2",
+    "mysql2": "^3.10.0",
+    "sutando": "^1.5.3"
+  }
+}
