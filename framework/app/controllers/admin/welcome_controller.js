@@ -1,4 +1,4 @@
-const { controller, router } = require('nodcat');
+const { controller } = require('nodcat');
 module.exports = class welcome_controller extends controller {
     menus(req, res) {
         let isAdmin = req.auth && req.auth.isRole('admin');
