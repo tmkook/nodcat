@@ -29,4 +29,4 @@ npm install
 
 node artisan serve:install
 
-echo "done!"
+echo "installation is complete\r\n please run 'cd $1' and 'node artisan'"
