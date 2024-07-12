@@ -49,7 +49,7 @@ module.exports = new class make {
             return logger.success('controller name invalid');
         }
         let file = params[0].toLowerCase();
-        let dir = (params[1] ?? 'admin').toLowerCase();
+        let dir = (params[1] ?? 'admin').replace('-', '').toLowerCase();
         let tpl = fs.readFileSync(path.join(__dirname, '../admin/storage/' + dir + '_controller.js'), 'utf-8').replaceAll('__filename__', file);
         fs.writeFileSync(process.cwd() + '/app/controllers/' + dir + '/' + file + '_controller.js', tpl);
         logger.success(file + ' controller has been created');
