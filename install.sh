@@ -25,6 +25,13 @@ cat>package.json<<EOF
 }
 EOF
 
+cat>.gitignore<<EOF
+.env
+.DS_Store
+.package-lock.json
+/node_modules
+EOF
+
 npm install -d
 
 node artisan serve:install
