@@ -25,8 +25,8 @@ cat>package.json<<EOF
 }
 EOF
 
-npm install
+npm install -d
 
 node artisan serve:install
 
-echo "installation is complete\r\n please run 'cd $1' and 'node artisan'"
+echo "installation is complete. please run 'cd $1' and 'node artisan'"
