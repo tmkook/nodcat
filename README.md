@@ -1,30 +1,36 @@
-# Nodcat
+# 简介
 Nodcat 是 Node 端的类似 Dcat Admin 的后台开发框架。基于 Express + Amis 二次开发而成，只需很少的代码即可快速构建出一个功能完善的高颜值后台系统。支持一键生成 CURD 代码，开箱即用，让开发者告别冗杂的 HTML 代码。
 
-# Start
+# 开始
+安装命令 demo 参数可修改为你的项目名，如果此命令无法连接到 github 请将 DNS 改为 8.8.8.8 再试。
 ```
-// 安装
-curl -s https://raw.githubusercontent.com/tmkook/nodcat/main/install.sh | bash -s project_name
+curl -kv https://raw.githubusercontent.com/tmkook/nodcat/main/install.sh | bash -s demo
+```
 
-// 运行服务
-node artisan 或 node artisan serve:run
+进入项目文件夹运行服务
+```
+node artisan
+```
+ 
+启动成功后即可访问
+```
+http://localhost:3000
+```
+
+# 访问后台
+访问前需配置好 .env 文件的数据库然后执行迁移命令
+```
+node artisan db:up
+```
+
+访问初始账号 admin 密码 123456
+```
+http://localhost:3000/admin
 ```
 
 # 查看命令
 ```
 node artisan serve:list
-```
-
-# 迁移
-```
-// 执行迁移文件创建表结构
-node artisan db:migrate
-
-// 执行迁移文件写入初始数据
-node artisan db:seed
-
-// 访问后台，初始账号 admin 密码 123456
-http://localhost:3000/admin
 ```
 
 # 路由规则
