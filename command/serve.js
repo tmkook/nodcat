@@ -15,10 +15,18 @@ module.exports = new class serve {
             fs.cpSync(dir + files[i], to + '/' + files[i], { recursive: true });
             logger.success(files[i] + ' has been created');
         }
+        this.public(params);
         this.env(params);
     }
 
-    list() {
+    public(params) {
+        fs.symlinkSync(path.join(__dirname, '../admin/storage/sdk'), process.cwd() + '/public/sdk', 'dir');
+        logger.success('sdk has been created');
+        fs.symlinkSync(process.cwd() + '/storage/uploads', process.cwd() + '/public/uploads', 'dir');
+        logger.success('uploads has been created');
+    }
+
+    list(params) {
         let files = fs.readdirSync(__dirname);
         for (let i in files) {
             if (files[i].indexOf('.js') > 0) {

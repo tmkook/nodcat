@@ -24,7 +24,7 @@ function getMigrations() {
 }
 
 module.exports = new class database {
-    async up() {
+    async up(params) {
         let migrations = getMigrations();
         for (let i in migrations) {
             logger.success(i);
@@ -33,7 +33,7 @@ module.exports = new class database {
         process.exit();
     }
 
-    async fake() {
+    async fake(params) {
         let migrations = getMigrations();
         for (let i in migrations) {
             logger.success(i);
@@ -42,7 +42,7 @@ module.exports = new class database {
         process.exit();
     }
 
-    async seed() {
+    async seed(params) {
         let migrations = getMigrations();
         for (let i in migrations) {
             logger.success(i);
@@ -51,7 +51,7 @@ module.exports = new class database {
         process.exit();
     }
 
-    async down() {
+    async down(params) {
         let migrations = getMigrations();
         for (let i in migrations) {
             logger.success(i);

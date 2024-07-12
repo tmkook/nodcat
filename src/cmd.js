@@ -1,9 +1,6 @@
 "use strict";
-const logger = require('./logger');
-const config = require('./config');
 const { sutando } = require('sutando');
-
-module.exports = function () {
+module.exports = function (config, logger) {
     //connection
     const database = config('database');
     for (let name in database) {

@@ -21,7 +21,6 @@ module.exports = class repository {
             data.items().makeHidden(hidden);
         }
         data = data.toData();
-        console.log(this.safeid_exp);
         if (this.safeid_exp) {
 
             for (let i in data.data) {

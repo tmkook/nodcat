@@ -1,6 +1,6 @@
 "use strict";
 let objects = {};
-objects.app = require('./src/app');
+objects.cmd = require('./src/cmd');
 objects.amis = require('./src/amis');
 objects.auth = require('./src/auth');
 objects.config = require('./src/config');
