@@ -61,7 +61,7 @@ module.exports = new class serve {
 
     env(params) {
         let data = [
-            'APP_KEY=' + secret.snow(64, true, true),
+            'APP_KEY=' + secret.snow(64),
             'APP_ENV=dev',
             'APP_PORT=3000',
             'APP_NAME=nodcat',
@@ -91,7 +91,7 @@ module.exports = new class serve {
         if (!data || data == '') {
             throw Error('.env file invalid');
         }
-        let key = secret.snow(64, true, true);
+        let key = secret.snow(64);
         let lines = data.indexOf("\r") ? data.split("\r") : data.split("\n");
         for (let i in lines) {
             if (lines[i].indexOf('APP_KEY') > -1) {

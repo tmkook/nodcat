@@ -4,18 +4,15 @@ module.exports = new class secure {
     crypto = crypto;
 
     //rand str
-    snow(length, isStrong, isBase64) {
+    snow(length, isStrong) {
         let result = '';
         let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         if (isStrong) {
-            characters += '~`!@#$%^&*()_-=+[{]}|;:,<.>/?';
+            characters += './-&$@';
         }
         for (let i = 0; i < length; i++) {
             let randomIndex = Math.floor(Math.random() * characters.length);
             result += characters.charAt(randomIndex);
-        }
-        if (isBase64) {
-            result = btoa(result);
         }
         return result;
     }
@@ -29,9 +26,9 @@ module.exports = new class secure {
     //jwt decode
     decrypt(sign, key) {
         if (sign && key) {
-            let dec = crypto.AES.decrypt(atob(decodeURIComponent(sign)), key).toString(crypto.enc.Utf8);
-            if (dec) {
-                try {
+            try {
+                let dec = crypto.AES.decrypt(atob(decodeURIComponent(sign)), key).toString(crypto.enc.Utf8);
+                if (dec) {
                     let ret = JSON.parse(dec);
                     if (ret.exp) {
                         let now = parseInt(((new Date).getTime()) / 1000);
@@ -39,9 +36,10 @@ module.exports = new class secure {
                     } else {
                         return ret;
                     }
-                } catch (e) {
-                    return null;
+
                 }
+            } catch (e) {
+                return null;
             }
         } else {
             return null;
