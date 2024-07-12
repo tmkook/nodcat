@@ -21,17 +21,17 @@ module.exports = class welcome_controller extends controller {
                             "children": [
                                 {
                                     "label": "账号管理",
-                                    "url": "admin-auth",
+                                    "url": "/auth/user/crud",
                                     "schemaApi": req.admin_uri('/auth/user/crud'),
                                 },
                                 {
                                     "label": "系统日志",
-                                    "url": "admin-log",
+                                    "url": "/auth/logs/crud",
                                     "schemaApi": req.admin_uri('/auth/logs/crud')
                                 },
                                 {
                                     "label": "代码生成",
-                                    "url": "admin-code",
+                                    "url": "/auth/code/crud",
                                     "schemaApi": req.admin_uri('/auth/code/crud')
                                 }
                             ],

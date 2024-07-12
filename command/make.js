@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const logger = require('../src/logger');
+
 module.exports = new class make {
 
     model(params) {
