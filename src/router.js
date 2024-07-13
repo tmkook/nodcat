@@ -1,5 +1,10 @@
 "use strict";
 const logger = require('./logger');
+
+/**
+ * 路由
+ * @returns express
+ */
 module.exports = (function router() {
     const bodyParser = require('body-parser');
     const cookieParser = require('cookie-parser');
@@ -10,6 +15,13 @@ module.exports = (function router() {
     router.use(bodyParser.json());
     router.use(cookieParser());
 
+
+    /**
+     * 加载控制器
+     * @param {string} file 
+     * @param {string} action 
+     * @returns 
+     */
     router.controller = function (file, action) {
         return async (req, res) => {
             try {
@@ -36,5 +48,8 @@ module.exports = (function router() {
         }
     }
 
+    /**
+     * express app
+     */
     return router;
 })();

@@ -2,6 +2,9 @@ const repository = require('../../src/repository');
 const secret = require('../../src/secret');
 const admin = require('../models/admin');
 
+/**
+ * ADMIN 仓库
+ */
 module.exports = class admin_repository extends repository {
 
     /**

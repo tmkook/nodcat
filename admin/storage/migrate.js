@@ -4,7 +4,10 @@ module.exports = new class migration {
         if (await model.getConnection().schema.hasTable(model.getTable())) return;
         await model.getConnection().schema.createTable(model.getTable(), table => {
             table.increments('id');
+            //...
+
             table.timestamps();
+            table.timestamp('deleted_at').nullable();
         });
     }
     async down() {

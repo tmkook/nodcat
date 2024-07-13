@@ -1,5 +1,12 @@
 let conf = null;
 const fs = require("fs");
+
+/**
+ * 获取配置
+ * @param {string} key 
+ * @param {*} def 
+ * @returns 
+ */
 module.exports = function (key, def) {
     if (!conf) {
         // parse env

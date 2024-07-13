@@ -1,9 +1,18 @@
 "use strict";
 const crypto = require("crypto-js");
+
+/**
+ * 安全加密
+ */
 module.exports = new class secure {
     crypto = crypto;
 
-    //rand str
+    /**
+     * 生成雪花字符串
+     * @param {integer} length 
+     * @param {bool} isStrong 
+     * @returns 
+     */
     snow(length, isStrong) {
         let result = '';
         let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -17,13 +26,24 @@ module.exports = new class secure {
         return result;
     }
 
-    //jwt encode
+    /**
+     * JWT 加密
+     * @param {*} data 
+     * @param {integer} exp 
+     * @param {string} key 
+     * @returns 
+     */
     encrypt(data, exp, key) {
         let str = JSON.stringify({ est: parseInt(((new Date).getTime()) / 1000), exp: exp, data: data });
         return encodeURIComponent(btoa(crypto.AES.encrypt(str, key).toString()));
     }
 
-    //jwt decode
+    /**
+     * JWT 解密
+     * @param {string} sign 
+     * @param {string} key 
+     * @returns 
+     */
     decrypt(sign, key) {
         if (sign && key) {
             try {
@@ -46,7 +66,12 @@ module.exports = new class secure {
         }
     }
 
-    //sign
+    /**
+     * MD5 签名
+     * @param {json} query 
+     * @param {string} key 
+     * @returns 
+     */
     sign(query, key) {
         let list = [];
         if (!query.ts) {
@@ -64,6 +89,12 @@ module.exports = new class secure {
         return query;
     }
 
+    /**
+     * 验证签名
+     * @param {json} query 
+     * @param {string} key 
+     * @returns 
+     */
     issign(query, key) {
         let sign = query.sign;
         return sign == this.sign(query, key);

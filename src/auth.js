@@ -1,9 +1,29 @@
 "use strict";
 const secret = require('./secret');
+
+/**
+ * 提供简单的登录验证和 ACL 控制
+ */
 module.exports = class auth {
+
+    /**
+     * express request
+     */
     req = null;
+
+    /**
+     * express response
+     */
     res = null;
+
+    /**
+     * 登录的用户信息
+     */
     user = null;
+
+    /**
+     * 后台配置
+     */
     options = {
         key: process.env.APP_KEY,
         prefix: "admin",
@@ -19,6 +39,12 @@ module.exports = class auth {
         }
     };
 
+    /**
+     * 
+     * @param {object} req 
+     * @param {object} res 
+     * @param {json} options 
+     */
     constructor(req, res, options) {
         this.req = req;
         this.res = res;
@@ -29,10 +55,18 @@ module.exports = class auth {
         }
     }
 
+    /**
+     * 清除登录
+     */
     logout() {
         this.res.cookie(this.options.cookie_name, '', { maxAge: 0 });
     }
 
+    /**
+     * 登录
+     * @param {json} user 
+     * @param {integer} exp 
+     */
     login(user, exp) {
         if (!user.id || !user.roles) {
             throw Error('user invalid');
@@ -45,6 +79,11 @@ module.exports = class auth {
         }
     }
 
+    /**
+     * 是否拥有角色
+     * @param {string} role 
+     * @returns bool
+     */
     isRole(role) {
         if (this.user) {
             let data = this.user.data.roles ?? '';
@@ -61,6 +100,12 @@ module.exports = class auth {
         return false;
     }
 
+    /**
+     * 是否拥有权限
+     * @param {string} url 
+     * @param {string} method 
+     * @returns bool
+     */
     can(url, method) {
         if (!url) {
             url = (this.req.baseUrl || this.req.path);

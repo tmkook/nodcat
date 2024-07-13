@@ -1,8 +1,7 @@
 const controller = require('../../src/controller');
-
 module.exports = class admin_logs_controller extends controller {
     crud(req, res) {
-        this.success({
+        res.success({
             "type": "form",
             "api": req.admin_uri('/auth/code'),
             "body": [
@@ -27,9 +26,9 @@ module.exports = class admin_logs_controller extends controller {
         let shell = require('child_process');
         shell.exec(cmd, { cwd: process.cwd() }, (err, stdout, stderr) => {
             if (stderr) {
-                this.error(stderr.trim());
+                res.error(stderr.trim());
             } else {
-                this.success(true, stdout.trim());
+                res.success(true, stdout.trim());
             }
         });
     }

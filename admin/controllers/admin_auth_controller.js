@@ -1,15 +1,15 @@
 const controller = require('../../src/controller');
 const repository = require('../repositories/admin_repository');
-
+const crud = require('../../src/crud');
 module.exports = class admin_auth_controller extends controller {
     index(req, res) {
-        const amis = this.amis();
+        const amis = new crud(req);
         const page = JSON.stringify(amis.getAdmin());
         res.render('admin.html', { title: "Admin", page: page });
     }
 
     login(req, res) {
-        let amis = this.amis();
+        const amis = new crud(req);
         let page = JSON.stringify(amis.getLogin());
         res.render('single.html', { title: "Login", page: page });
     }
@@ -25,15 +25,16 @@ module.exports = class admin_auth_controller extends controller {
         if (user) {
             let exp = req.body.remember ? 86400 * 30 : 3600;
             req.auth.login(user, exp);
-            this.success(user);
+            res.success(user);
         }
     }
 
     async postProfile(req, res) {
-        let user = await repository.instance().profile(req.auth.user.data, req.body.oldpassword, req.body.newpassword, req.body.avatar, req.body.nickname);
+        let repo = new repository;
+        let user = await repo.profile(req.auth.user.data, req.body.oldpassword, req.body.newpassword, req.body.avatar, req.body.nickname);
         if (user) {
             req.auth.login(user, req.auth.user.exp);
-            this.success(user);
+            res.success(user);
         }
     }
 }

@@ -4,12 +4,12 @@
   "description": "node framework",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js"
+    "run": "node index.js"
   },
   "keywords": [
     "dcat",
     "nodcat",
-    "framework"
+    "mvc framework"
   ],
   "author": "tmkook",
   "license": "ISC",

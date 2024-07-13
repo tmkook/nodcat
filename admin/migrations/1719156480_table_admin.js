@@ -23,7 +23,7 @@ module.exports = new class migration {
     }
     async seed() {
         await model.getConnection().table(model.getTable()).insert([
-            { username: "admin", nickname: "Admin", password: global.app.crypto.MD5('123456').toString(), created_at: '2024-05-20 13:14:20', roles: "admin", updated_at: '2024-6-20 13:14:20' },
+            { username: "admin", nickname: "admin", password: "e10adc3949ba59abbe56e057f20f883e", created_at: '2024-05-20 13:14:20', roles: "admin", updated_at: '2024-6-20 13:14:20' },
         ]);
     }
 }

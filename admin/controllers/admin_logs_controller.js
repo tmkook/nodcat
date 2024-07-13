@@ -1,8 +1,9 @@
 const controller = require('../../src/controller');
+const crud = require('../../src/crud');
 const fs = require('fs');
 module.exports = class admin_logs_controller extends controller {
     crud(req, res) {
-        let amis = this.amis();
+        let amis = new crud(res);
         amis.show([
             {
                 "name": "id",
@@ -39,10 +40,10 @@ module.exports = class admin_logs_controller extends controller {
             "label": "清除",
             "confirmText": "确定清除当前日志文件?",
             "actionType": "ajax",
-            "api": "delete:" + req.admin_uri('/logs') + "?id=clean",
+            "api": "delete:" + req.admin_uri('/auth/logs') + "?id=clean",
         });
 
-        this.success(amis.render());
+        res.success(amis.render());
     }
 
     getFiles() {
@@ -62,11 +63,11 @@ module.exports = class admin_logs_controller extends controller {
         let logs = [];
         let total = 0;
         let files = this.getFiles();
-        let file = files[0] ?? 'stack.log';
         let page = parseInt(req.query.page ?? 1);
         let perpage = parseInt(req.query.perpage ?? 20);
-        if (fs.existsSync('storage/logs/' + file)) {
-            let content = fs.readFileSync('storage/logs/' + file).split("\r\n").reverse();
+        if (files.length) {
+            let file = process.cwd() + '/storage/logs/' + files[0];
+            let content = fs.readFileSync(file, 'utf-8').split("\r\n").reverse();
             let start = (page - 1) * perpage;
             let search = req.query.content;
             total = content.length;
@@ -92,22 +93,26 @@ module.exports = class admin_logs_controller extends controller {
             "perPage": perpage,
             "lastPage": Math.ceil(logs.length / perpage)
         }
-        this.success(data);
+        res.success(data);
     }
 
     delete(req, res) {
         let files = this.getFiles();
-        let file = files[0] ?? 'stack.log';
-        let content = app.getFileContent('storage/logs/' + file).split("\r\n").reverse();
-        if (this.req.query.id == 'clean') {
-            app.deleteFile('storage/logs/' + file);
-        } else {
-            let id = this.req.query.id.split(',');
-            for (let i in id) {
-                content.splice(id[i], 1);
+        if (files.length) {
+            let file = process.cwd() + '/storage/logs/' + files[0];
+            if (req.query.id == 'clean') {
+                fs.rmSync(file);
+            } else {
+                let content = fs.readFileSync(file, 'utf-8').split("\r\n").reverse();
+                let id = req.query.id.split(',');
+                for (let i in id) {
+                    content.splice(id[i], 1);
+                }
+                fs.writeFileSync(file, content.reverse().join("\r\n"));
             }
-            fs.writeFileSync(process.cwd() + '/storage/logs/' + file, content.reverse().join("\r\n"));
+            res.success(file);
+        } else {
+            res.error('not found log file');
         }
-        this.success(file);
     }
 }

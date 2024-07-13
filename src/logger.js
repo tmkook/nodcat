@@ -1,7 +1,14 @@
 "use strict";
 const fs = require("fs");
+/**
+ * 日志
+ */
 module.exports = new class logger {
-    //write log
+    /**
+     * 写入日志
+     * @param {string} msg 
+     * @param {string} level 
+     */
     write(msg, level) {
         if (!level) {
             level = 'info';
@@ -42,7 +49,11 @@ module.exports = new class logger {
         fs.appendFileSync(process.cwd() + '/storage/logs/' + file, level + ' [' + year + '/' + month + '/' + day + ' ' + hours + ':' + minute + ':' + second + '] ' + msg + "\r\n");
     }
 
-    //debug log
+    /**
+     * 显示日志 - 按系统配置写入日志
+     * @param {string} msg 
+     * @param {string} level 
+     */
     show(msg, level) {
         let colors = { error: 31, success: 32, debug: 33, info: 34, test: 36 };
         let color = colors[level] ?? 32;
@@ -52,22 +63,42 @@ module.exports = new class logger {
         }
     }
 
+    /**
+     * 测试日志
+     * @param {string} msg 
+     */
     test(msg) {
         this.show(msg, 'test');
     }
 
+    /**
+     * 信息
+     * @param {string} msg 
+     */
     info(msg) {
         this.show(msg, 'info');
     }
 
+    /**
+     * 调试
+     * @param {string} msg 
+     */
     debug(msg) {
         this.show(msg, 'debug');
     }
 
+    /**
+     * 错误
+     * @param {string} msg 
+     */
     error(msg) {
         this.show(msg, 'error');
     }
 
+    /**
+     * 成功
+     * @param {string} msg 
+     */
     success(msg) {
         this.show(msg, 'success');
     }

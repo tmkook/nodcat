@@ -1,10 +1,10 @@
+const crud = require('../../src/crud');
 const config = require('../../src/config');
 const controller = require('../../src/controller');
 const repository = require('../repositories/admin_repository');
-
 module.exports = class admin_user_controller extends controller {
     crud(req, res) {
-        let amis = this.amis();
+        let amis = new crud(req);
         let roles = amis.makeOptions(Object.keys(config('permission.permissions')));
         amis.show([
             {
@@ -150,29 +150,33 @@ module.exports = class admin_user_controller extends controller {
             }
 
         ]);
-        this.success(amis.render());
+        res.success(amis.render());
     }
 
     async grid(req, res) {
-        let list = await repository.instance().list(req.query, ['password']);
-        this.success(list);
+        let repo = new repository;
+        let list = await repo.list(req.query, ['password']);
+        res.success(list);
     }
 
     async detail(req, res) {
-        let data = await repository.instance().show(req.params);
-        this.success(data);
+        let repo = new repository;
+        let data = await repo.show(req.params.id);
+        res.success(data);
     }
 
     async delete(req, res) {
-        let ids = await repository.instance().delete(req.query);
-        this.success(ids);
+        let repo = new repository;
+        let ids = await repo.delete(req.query.id);
+        res.success(ids);
     }
 
     async form(req, res) {
+        let repo = new repository;
         if (req.body.id) {
-            this.success(await repository.instance().update(req.body));
+            res.success(await repo.update(req.body));
         } else {
-            this.success(await repository.instance().store(req.body));
+            res.success(await repo.store(req.body));
         }
     }
 }

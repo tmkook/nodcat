@@ -1,14 +1,14 @@
 "use strict";
-module.exports = class Amis {
+module.exports = class crud {
     api = null;
-    crud = null;
+    schema = null;
     operation = [];
     prefix = 'admin';
     userinfo = { id: 0, nickname: "guest", roles: "" };
     permission = { get: false, post: false, delete: false };
 
     constructor(req) {
-        this.api = (req.baseUrl || req.path).replace('/crud', '');
+        this.api = (req.baseUrl || req.path).replace('/schema', '');
         if (req.auth) {
             if (req.auth.user) {
                 this.userinfo = req.auth.user.data;
@@ -19,7 +19,7 @@ module.exports = class Amis {
             this.permission.delete = req.auth.can(this.api, 'delete');
         }
 
-        this.crud = {
+        this.schema = {
             "type": "crud",
             "perPage": 20,
             "syncLocation": false,
@@ -49,7 +49,7 @@ module.exports = class Amis {
     }
 
     show(json) {
-        this.crud.columns = json;
+        this.schema.columns = json;
         return this;
     }
 
@@ -78,7 +78,7 @@ module.exports = class Amis {
                 json.push(data[i]);
             }
         }
-        this.crud.headerToolbar.push({
+        this.schema.headerToolbar.push({
             "type": "button",
             "label": "新建",
             "level": "primary",
@@ -120,7 +120,7 @@ module.exports = class Amis {
     }
 
     filter(json) {
-        this.crud.filter = {
+        this.schema.filter = {
             "title": "条件搜索",
             "body": [
                 {
@@ -145,7 +145,7 @@ module.exports = class Amis {
             query.push(json[i].name + '=${' + json[i].name + '}');
         }
         if (query.length > 0) {
-            this.crud.api += '&' + query.join('&');
+            this.schema.api += '&' + query.join('&');
         }
         return this;
     }
@@ -157,7 +157,7 @@ module.exports = class Amis {
     }
 
     render(page) {
-        if (!this.crud) {
+        if (!this.schema) {
             throw Error('Please set up the API first');
         }
         if (this.operation.length > 0) {
@@ -169,7 +169,7 @@ module.exports = class Amis {
                 "confirmText": "确认删除?",
                 "api": "delete:" + this.api + "?id=$id"
             });
-            this.crud.columns.push({
+            this.schema.columns.push({
                 "type": "operation",
                 "label": "操作",
                 "align": "right",
@@ -187,10 +187,10 @@ module.exports = class Amis {
             return {
                 "type": "page",
                 "title": "",
-                "body": [this.crud]
+                "body": [this.schema]
             }
         } else {
-            page.body.push(this.crud);
+            page.body.push(this.schema);
             return page;
         }
     }

@@ -1,16 +1,21 @@
 const secret = require('./secret');
 const config = require('./config');
 
+/**
+ * 后台数据仓库基类
+ * 提供简单的 CRUD 接口
+ */
 module.exports = class repository {
     model = null;
     safeid_exp = 86400;
     key = config('permission.key');
 
-    static instance() {
-        return new this;
-    }
-
-    //列表
+    /**
+     * 列表
+     * @param {json} params 查询参数
+     * @param {array} hidden 隐藏字段
+     * @returns 
+     */
     async list(params, hidden = []) {
         if (params.id) {
             let id = this.safeid_exp ? secret.encrypt(params.id, this.safeid_exp, this.key) : parseInt(params.id);
@@ -40,19 +45,28 @@ module.exports = class repository {
         return Promise.resolve(result);
     }
 
-    //详情
-    async show(params, hidden = []) {
-        let id = this.safeid_exp ? secret.decrypt(params.id, this.key).data : parseInt(params.id);
+    /**
+     * 详情
+     * @param {string} safeid 列表id
+     * @param {array} hidden 隐藏字段
+     * @returns 
+     */
+    async show(safeid, hidden = []) {
+        let id = this.safeid_exp ? secret.decrypt(safeid, this.key).data : parseInt(safeid);
         let data = await this.model.where('id', id).firstOrFail();
         if (data && hidden.length) {
             data.makeHidden(hidden);
         }
         data = data.toData();
-        data.id = params.id;
+        data.id = safeid;
         return Promise.resolve(data);
     }
 
-    //新增
+    /**
+     * 新增
+     * @param {json} params 
+     * @returns 
+     */
     async store(params) {
         let item = new this.model;
         for (let i in params) {
@@ -62,7 +76,11 @@ module.exports = class repository {
         return Promise.resolve(params);
     }
 
-    //更新
+    /**
+     * 更新
+     * @param {json} params 
+     * @returns 
+     */
     async update(params) {
         params.id = this.safeid_exp ? secret.decrypt(params.id, this.key).data : parseInt(params.id);
         let item = await this.model.findOrFail(params.id);
@@ -73,9 +91,13 @@ module.exports = class repository {
         return Promise.resolve(params);
     }
 
-    //删除
-    async delete(params) {
-        let ids = params.id.split(',');
+    /**
+     * 删除
+     * @param {string} id 
+     * @returns 
+     */
+    async delete(id) {
+        let ids = id.split(',');
         for (let i in ids) {
             if (this.safeid_exp) {
                 ids[i] = secret.decrypt(ids[i], this.key).data;

@@ -45,7 +45,7 @@ router.all('*', (req, res, next) => {
 });
 
 router.admin = function (path, controller) {
-    router.get(admin_uri(path) + '/crud', router.controller(controller, 'crud'));
+    router.get(admin_uri(path) + '/schema', router.controller(controller, 'schema'));
     router.get(admin_uri(path) + '/:id', router.controller(controller, 'detail'));
     router.get(admin_uri(path), router.controller(controller, 'grid'));
     router.post(admin_uri(path), router.controller(controller, 'form'));
