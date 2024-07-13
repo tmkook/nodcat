@@ -92,6 +92,14 @@ module.exports = class repository {
     }
 
     /**
+     * 新增或修改
+     * @param {json} post 
+     */
+    async form(post) {
+        return post.id ? this.update(post) : this.store(post);
+    }
+
+    /**
      * 删除
      * @param {string} id 
      * @returns 

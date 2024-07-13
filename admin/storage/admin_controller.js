@@ -76,7 +76,7 @@ module.exports = class __filename___controller extends controller {
 
     detail(req, res) {
         let repo = new repository;
-        repo.show(req.params).then(data => {
+        repo.show(req.params.id).then(data => {
             res.success(data);
         }).catch(e => {
             res.error(e.toString());
@@ -94,11 +94,10 @@ module.exports = class __filename___controller extends controller {
 
     form(req, res) {
         let repo = new repository;
-        let promis = req.body.id ? repo.update(req.body) : repo.store(req.body);
-        promis.then(data => {
+        repo.form(req.body).then(data => {
             res.success(data);
         }).catch(e => {
-            res.error(e.toString());
+            res.error(e);
         });
     }
 }
