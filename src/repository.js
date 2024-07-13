@@ -1,5 +1,6 @@
 const secret = require('./secret');
 const config = require('./config');
+const parseid = (dec) => dec ? dec.data : null;
 
 /**
  * 后台数据仓库基类
@@ -51,7 +52,7 @@ module.exports = class repository {
      * @returns 
      */
     async show(id, hidden = []) {
-        let decid = this.safeid_exp ? secret.decrypt(id, this.key).data : parseInt(id);
+        let decid = this.safeid_exp ? parseid(secret.decrypt(id, this.key)) : parseInt(id);
         let data = await this.model.where('id', decid).firstOrFail();
         if (data && hidden.length) {
             data.makeHidden(hidden);
@@ -71,7 +72,7 @@ module.exports = class repository {
         for (let i in post) {
             item[i] = post[i];
         }
-        item.save();
+        await item.save();
         return Promise.resolve(item.toData());
     }
 
@@ -81,7 +82,7 @@ module.exports = class repository {
      * @returns 
      */
     async update(post) {
-        post.id = this.safeid_exp ? secret.decrypt(post.id, this.key).data : parseInt(post.id);
+        post.id = this.safeid_exp ? parseid(secret.decrypt(post.id, this.key)) : parseInt(post.id);
         let item = await this.model.findOrFail(post.id);
         for (let i in post) {
             item[i] = post[i];
@@ -99,7 +100,7 @@ module.exports = class repository {
         let ids = id.split(',');
         for (let i in ids) {
             if (this.safeid_exp) {
-                ids[i] = secret.decrypt(ids[i], this.key).data;
+                ids[i] = parseid(secret.decrypt(ids[i], this.key));
             } else {
                 ids[i] = parseInt(ids[i]);
             }

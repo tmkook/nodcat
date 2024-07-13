@@ -7,10 +7,10 @@ module.exports = class __filename___controller extends controller {
          * crud 是一个简单的 amis json 封装，如果你需要个性化可直接返回 amis 配置，文档如下
          * https://aisuda.bce.baidu.com/amis/zh-CN/components/app
          */
-        let crud = new crud(req);
+        let amis = new crud(req);
 
         // 列表
-        crud.show([
+        amis.show([
             {
                 "name": "id",
                 "label": "ID",
@@ -24,7 +24,7 @@ module.exports = class __filename___controller extends controller {
         ]);
 
         // 详情
-        crud.detail([
+        amis.detail([
             {
                 "type": "static",
                 "name": "id",
@@ -43,7 +43,7 @@ module.exports = class __filename___controller extends controller {
         ]);
 
         // 表单
-        crud.createAndUpdate([
+        amis.createAndUpdate([
             {
                 "type": "input-text",
                 "name": "id",
@@ -53,7 +53,7 @@ module.exports = class __filename___controller extends controller {
         ]);
 
         // 搜索
-        crud.filter([
+        amis.filter([
             {
                 "type": "input-text",
                 "name": "id",
@@ -62,16 +62,9 @@ module.exports = class __filename___controller extends controller {
             }
         ]);
 
-        // 返回
-        // console.log(crud.render());
-        res.success(crud.render());
+        res.success(amis.render());
     }
 
-    /**
-     * 表格接口
-     * @param {*} req 
-     * @param {*} res 
-     */
     grid(req, res) {
         let repo = new repository;
         repo.list(req.query).then(list => {
@@ -81,11 +74,6 @@ module.exports = class __filename___controller extends controller {
         })
     }
 
-    /**
-     * 详情接口
-     * @param {*} req 
-     * @param {*} res 
-     */
     detail(req, res) {
         let repo = new repository;
         repo.show(req.params).then(data => {
@@ -95,11 +83,6 @@ module.exports = class __filename___controller extends controller {
         });
     }
 
-    /**
-     * 删除接口
-     * @param {*} req 
-     * @param {*} res 
-     */
     delete(req, res) {
         let repo = new repository;
         repo.delete(req.query.id).then(data => {
@@ -109,7 +92,6 @@ module.exports = class __filename___controller extends controller {
         });
     }
 
-    //表单
     form(req, res) {
         let repo = new repository;
         let promis = req.body.id ? repo.update(req.body) : repo.store(req.body);

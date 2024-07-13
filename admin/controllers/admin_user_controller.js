@@ -153,30 +153,40 @@ module.exports = class admin_user_controller extends controller {
         res.success(amis.render());
     }
 
-    async grid(req, res) {
+    grid(req, res) {
         let repo = new repository;
-        let list = await repo.list(req.query, ['password']);
-        res.success(list);
+        repo.list(req.query, ['password']).then(data => {
+            res.success(data);
+        }).catch(e => {
+            res.error(e);
+        });
     }
 
-    async detail(req, res) {
+    detail(req, res) {
         let repo = new repository;
-        let data = await repo.show(req.params.id);
-        res.success(data);
+        repo.show(req.params.id).then(data => {
+            res.success(data);
+        }).catch(e => {
+            res.error(e);
+        });
     }
 
-    async delete(req, res) {
+    delete(req, res) {
         let repo = new repository;
-        let ids = await repo.delete(req.query.id);
-        res.success(ids);
+        repo.delete(req.query.id).then(data => {
+            res.success(data);
+        }).catch(e => {
+            res.error(e);
+        });
     }
 
-    async form(req, res) {
+    form(req, res) {
         let repo = new repository;
-        if (req.body.id) {
-            res.success(await repo.update(req.body));
-        } else {
-            res.success(await repo.store(req.body));
-        }
+        let promis = req.body.id ? repo.update(req.body) : repo.store(req.body);
+        promis.then(data => {
+            res.success(data);
+        }).catch(e => {
+            res.error(e.toString());
+        });
     }
 }
