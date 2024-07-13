@@ -12,22 +12,21 @@ module.exports = class repository {
 
     /**
      * 列表
-     * @param {json} params 查询参数
+     * @param {json} query 查询参数
      * @param {array} hidden 隐藏字段
      * @returns 
      */
-    async list(params, hidden = []) {
-        if (params.id) {
-            let id = this.safeid_exp ? secret.encrypt(params.id, this.safeid_exp, this.key) : parseInt(params.id);
+    async list(query, hidden = []) {
+        if (query.id) {
+            let id = this.safeid_exp ? secret.encrypt(query.id, this.safeid_exp, this.key) : parseInt(query.id);
             this.model.where('id', id);
         }
-        let data = await this.model.paginate(params.page || 1, params.perpage || 20);
+        let data = await this.model.paginate(query.page || 1, query.perpage || 20);
         if (hidden.length) {
             data.items().makeHidden(hidden);
         }
         data = data.toData();
         if (this.safeid_exp) {
-
             for (let i in data.data) {
                 if (data.data[i].id) {
                     data.data[i].id = secret.encrypt(data.data[i].id, this.safeid_exp, this.key);
@@ -47,48 +46,48 @@ module.exports = class repository {
 
     /**
      * 详情
-     * @param {string} safeid 列表id
+     * @param {string} id 列表id
      * @param {array} hidden 隐藏字段
      * @returns 
      */
-    async show(safeid, hidden = []) {
-        let id = this.safeid_exp ? secret.decrypt(safeid, this.key).data : parseInt(safeid);
-        let data = await this.model.where('id', id).firstOrFail();
+    async show(id, hidden = []) {
+        let decid = this.safeid_exp ? secret.decrypt(id, this.key).data : parseInt(id);
+        let data = await this.model.where('id', decid).firstOrFail();
         if (data && hidden.length) {
             data.makeHidden(hidden);
         }
         data = data.toData();
-        data.id = safeid;
+        data.id = id;
         return Promise.resolve(data);
     }
 
     /**
      * 新增
-     * @param {json} params 
+     * @param {json} post 
      * @returns 
      */
-    async store(params) {
-        let item = new this.model;
-        for (let i in params) {
-            item[i] = params[i];
+    async store(post) {
+        let item = this.model.getModel();
+        for (let i in post) {
+            item[i] = post[i];
         }
-        await item.save();
-        return Promise.resolve(params);
+        item.save();
+        return Promise.resolve(item.toData());
     }
 
     /**
      * 更新
-     * @param {json} params 
+     * @param {json} post 
      * @returns 
      */
-    async update(params) {
-        params.id = this.safeid_exp ? secret.decrypt(params.id, this.key).data : parseInt(params.id);
-        let item = await this.model.findOrFail(params.id);
-        for (let i in params) {
-            item[i] = params[i];
+    async update(post) {
+        post.id = this.safeid_exp ? secret.decrypt(post.id, this.key).data : parseInt(post.id);
+        let item = await this.model.findOrFail(post.id);
+        for (let i in post) {
+            item[i] = post[i];
         }
         await item.save();
-        return Promise.resolve(params);
+        return Promise.resolve(post);
     }
 
     /**

@@ -34,8 +34,9 @@ module.exports = new class secure {
      * @returns 
      */
     encrypt(data, exp, key) {
-        let str = JSON.stringify({ est: parseInt(((new Date).getTime()) / 1000), exp: exp, data: data });
-        return encodeURIComponent(btoa(crypto.AES.encrypt(str, key).toString()));
+        let sign = JSON.stringify({ est: parseInt(((new Date).getTime()) / 1000), exp: exp, data: data });
+        sign = crypto.enc.Base64url.stringify(crypto.enc.Utf8.parse(crypto.AES.encrypt(sign, key).toString()));
+        return sign;
     }
 
     /**
@@ -47,7 +48,8 @@ module.exports = new class secure {
     decrypt(sign, key) {
         if (sign && key) {
             try {
-                let dec = crypto.AES.decrypt(atob(decodeURIComponent(sign)), key).toString(crypto.enc.Utf8);
+                sign = crypto.enc.Base64url.parse(sign).toString(crypto.enc.Utf8);
+                let dec = crypto.AES.decrypt(sign, key).toString(crypto.enc.Utf8);
                 if (dec) {
                     let ret = JSON.parse(dec);
                     if (ret.exp) {

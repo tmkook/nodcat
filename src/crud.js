@@ -396,7 +396,7 @@ module.exports = class crud {
                                                 "title": "个人设置",
                                                 "body": {
                                                     "type": "form",
-                                                    "api": '/' + this.prefix + '/system/reset',
+                                                    "api": '/' + this.prefix + '/auth/user/profile',
                                                     "body": [
                                                         {
                                                             "type": "input-text",

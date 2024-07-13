@@ -19,26 +19,24 @@ module.exports = class admin_auth_controller extends controller {
         res.redirect(req.admin_uri('/auth/login'));
     }
 
-    async postLogin(req, res) {
+    postLogin(req, res) {
         let repo = new repository;
-        let user = await repo.login(req.body.username, req.body.password);
-        if (user) {
+        repo.login(req.body.username, req.body.password).then(user => {
             let exp = req.body.remember ? 86400 * 30 : 3600;
             req.auth.login(user, exp);
             res.success(user);
-        } else {
-            return user;
-        }
+        }).catch(e => {
+            res.error(e.toString());
+        });
     }
 
-    async postProfile(req, res) {
+    postProfile(req, res) {
         let repo = new repository;
-        let user = await repo.profile(req.auth.user.data, req.body.oldpassword, req.body.newpassword, req.body.avatar, req.body.nickname);
-        if (user) {
+        repo.profile(req.auth.user.data, req.body).then(user => {
             req.auth.login(user, req.auth.user.exp);
             res.success(user);
-        } else {
-            return user;
-        }
+        }).catch(e => {
+            res.error(e.toString());
+        });
     }
 }

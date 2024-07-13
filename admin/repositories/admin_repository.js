@@ -54,25 +54,27 @@ module.exports = class admin_repository extends repository {
     /**
     * 修改资料
     */
-    async profile(auth, oldpassword, newpassword, avatar, nickname) {
+    async profile(auth, post) {
         let user = await this.model.where('id', auth.id).firstOrFail();
-        if (oldpassword && newpassword) {
-            if (newpassword.length < 5) {
+        if (post.oldpassword && post.newpassword) {
+            if (post.newpassword.length < 5) {
                 return Promise.reject('password invalid');
-            } else if (oldpassword == newpassword) {
+            } else if (post.oldpassword == post.newpassword) {
                 return Promise.reject('new password invalid');
-            } else if (secret.crypto.MD5(oldpassword).toString() != user.password) {
+            } else if (secret.crypto.MD5(post.oldpassword).toString() != user.password) {
                 return Promise.reject('old password invalid');
+            } else if (post.newpassword != post.repassword) {
+                return Promise.reject('password is inconsistent twice');
             }
-            user.password = secret.crypto.MD5(newpassword).toString();
+            user.password = secret.crypto.MD5(post.newpassword).toString();
         }
 
-        if (user.avatar != avatar) {
-            user.avatar = avatar;
+        if (user.avatar != post.avatar) {
+            user.avatar = post.avatar;
         }
 
-        if (user.nickname != nickname) {
-            user.nickname = nickname;
+        if (user.nickname != post.nickname) {
+            user.nickname = post.nickname;
         }
 
         await user.save();

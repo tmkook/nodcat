@@ -3,7 +3,7 @@ const crud = require('../../src/crud');
 const fs = require('fs');
 module.exports = class admin_logs_controller extends controller {
     schema(req, res) {
-        let amis = new crud(res);
+        let amis = new crud(req);
         amis.show([
             {
                 "name": "id",
@@ -35,7 +35,7 @@ module.exports = class admin_logs_controller extends controller {
             }
         ]);
 
-        amis.crud.headerToolbar.push({
+        amis.schema.headerToolbar.push({
             "type": "button",
             "label": "清除",
             "confirmText": "确定清除当前日志文件?",

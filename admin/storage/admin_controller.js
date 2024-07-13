@@ -72,10 +72,13 @@ module.exports = class __filename___controller extends controller {
      * @param {*} req 
      * @param {*} res 
      */
-    async grid(req, res) {
+    grid(req, res) {
         let repo = new repository;
-        let list = await repo.list(req.query);
-        res.success(list);
+        repo.list(req.query).then(list => {
+            res.success(list);
+        }).catch(e => {
+            res.error(e.toString());
+        })
     }
 
     /**
@@ -83,10 +86,13 @@ module.exports = class __filename___controller extends controller {
      * @param {*} req 
      * @param {*} res 
      */
-    async detail(req, res) {
+    detail(req, res) {
         let repo = new repository;
-        let data = await repo.show(req.params);
-        res.success(data);
+        repo.show(req.params).then(data => {
+            res.success(data);
+        }).catch(e => {
+            res.error(e.toString());
+        });
     }
 
     /**
@@ -94,19 +100,23 @@ module.exports = class __filename___controller extends controller {
      * @param {*} req 
      * @param {*} res 
      */
-    async delete(req, res) {
+    delete(req, res) {
         let repo = new repository;
-        let ids = await repo.delete(req.query.id);
-        res.success(ids);
+        repo.delete(req.query.id).then(data => {
+            res.success(data);
+        }).catch(e => {
+            res.error(e.toString());
+        });
     }
 
     //表单
-    async form(req, res) {
+    form(req, res) {
         let repo = new repository;
-        if (req.body.id) {
-            res.success(await repo.update(req.body));
-        } else {
-            res.success(await repo.store(req.body));
-        }
+        let promis = req.body.id ? repo.update(req.body) : repo.store(req.body);
+        promis.then(data => {
+            res.success(data);
+        }).catch(e => {
+            res.error(e.toString());
+        });
     }
 }
