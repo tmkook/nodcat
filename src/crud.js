@@ -1,4 +1,7 @@
-"use strict";
+/**
+ * amis crud 脚手架，文档如下
+ * https://aisuda.bce.baidu.com/amis/zh-CN/docs/index
+ */
 module.exports = class crud {
     api = null;
     schema = null;
@@ -7,6 +10,10 @@ module.exports = class crud {
     userinfo = { id: 0, nickname: "guest", roles: "" };
     permission = { get: false, post: false, delete: false };
 
+    /**
+     * 初始化
+     * @param {object} req 
+     */
     constructor(req) {
         this.api = (req.baseUrl || req.path).replace('/schema', '');
         if (req.auth) {
@@ -48,11 +55,21 @@ module.exports = class crud {
         }
     }
 
+    /**
+     * 表格显示字段
+     * https://aisuda.bce.baidu.com/amis/zh-CN/components/crud
+     * @param {json} json 
+     */
     show(json) {
         this.schema.columns = json;
         return this;
     }
 
+    /**
+     * 详情显示字段
+     * https://aisuda.bce.baidu.com/amis/zh-CN/components/crud
+     * @param {json} json 
+    */
     detail(json) {
         this.operation.push({
             "type": "button",
@@ -71,6 +88,11 @@ module.exports = class crud {
         return this;
     }
 
+    /**
+     * 创建表单字段
+     * https://aisuda.bce.baidu.com/amis/zh-CN/components/form/index
+     * @param {json} data 
+    */
     create(data) {
         let json = [];
         for (let i in data) {
@@ -97,7 +119,12 @@ module.exports = class crud {
         return this;
     }
 
-    update(json) {
+    /**
+     * 修改表单字段
+     * https://aisuda.bce.baidu.com/amis/zh-CN/components/form/index
+     * @param {json} data 
+    */
+    update(data) {
         this.operation.push({
             "type": "button",
             "label": "修改",
@@ -108,24 +135,35 @@ module.exports = class crud {
                 "body": {
                     "type": "form",
                     "api": this.api,
-                    "body": json
+                    "body": data
                 }
             }
         });
         return this;
     }
 
+    /**
+     * 新增和修改字段
+     * 也可以分开 create 和 update 单独定义
+     * https://aisuda.bce.baidu.com/amis/zh-CN/components/form/index
+     * @param {json} data 
+    */
     createAndUpdate(json) {
         return this.create(json).update(json);
     }
 
-    filter(json) {
+    /**
+     * 搜索字段
+     * https://aisuda.bce.baidu.com/amis/zh-CN/components/form/index
+     * @param {json} data 
+     */
+    filter(data) {
         this.schema.filter = {
             "title": "条件搜索",
             "body": [
                 {
                     "type": "group",
-                    "body": json
+                    "body": data
                 }
             ],
             "actions": [
@@ -141,8 +179,8 @@ module.exports = class crud {
             ]
         };
         let query = [];
-        for (let i in json) {
-            query.push(json[i].name + '=${' + json[i].name + '}');
+        for (let i in data) {
+            query.push(data[i].name + '=${' + data[i].name + '}');
         }
         if (query.length > 0) {
             this.schema.api += '&' + query.join('&');
@@ -150,12 +188,20 @@ module.exports = class crud {
         return this;
     }
 
-    operation(json) {
-        for (let i in json) {
-            this.operation.push(json[i]);
+    /**
+     * 列表操作字段
+     * @param {json} data 
+     */
+    operation(data) {
+        for (let i in data) {
+            this.operation.push(data[i]);
         }
     }
 
+    /**
+     * 返回 crud
+     * @param {undefined|json} page
+     */
     render(page) {
         if (!this.schema) {
             throw Error('Please set up the API first');
@@ -195,6 +241,13 @@ module.exports = class crud {
         }
     }
 
+    /**
+     * 将数据转为 amis options source 格式
+     * @param {json|array} data 
+     * @param {string} label 
+     * @param {string} value 
+     * @returns 
+     */
     makeOptions(data, label, value) {
         let options = [];
         if (label && value) {
@@ -215,6 +268,10 @@ module.exports = class crud {
         return options;
     }
 
+    /**
+     * 登录页
+     * @returns json
+     */
     getLogin() {
         return {
             "type": "page",
@@ -294,6 +351,10 @@ module.exports = class crud {
         };
     }
 
+    /**
+     * 后台页面
+     * @returns json
+     */
     getAdmin() {
         return {
             "type": "app",

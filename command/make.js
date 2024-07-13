@@ -12,7 +12,7 @@ module.exports = new class make {
         let tpl = fs.readFileSync(path.join(__dirname, '../admin/storage/model.js'), 'utf-8').replaceAll('__filename__', file);
         fs.writeFileSync(process.cwd() + '/app/models/' + file + '.js', tpl);
         logger.success(file + ' model has been created');
-        if (this.isCrud != true) {
+        if (!this.bat) {
             process.exit(0);
         }
     }
@@ -26,7 +26,7 @@ module.exports = new class make {
         let time = parseInt(Date.now() / 1000);
         fs.writeFileSync(process.cwd() + '/app/migrations/' + time + '_table_' + file + '.js', tpl);
         logger.success(file + ' migrate has been created');
-        if (this.isCrud != true) {
+        if (!this.bat) {
             process.exit(0);
         }
     }
@@ -39,7 +39,7 @@ module.exports = new class make {
         let tpl = fs.readFileSync(path.join(__dirname, '../admin/storage/repository.js'), 'utf-8').replaceAll('__filename__', file);
         fs.writeFileSync(process.cwd() + '/app/repositories/' + file + '_repository.js', tpl);
         logger.success(file + ' repository has been created');
-        if (this.isCrud != true) {
+        if (!this.bat) {
             process.exit(0);
         }
     }
@@ -53,13 +53,13 @@ module.exports = new class make {
         let tpl = fs.readFileSync(path.join(__dirname, '../admin/storage/' + dir + '_controller.js'), 'utf-8').replaceAll('__filename__', file);
         fs.writeFileSync(process.cwd() + '/app/controllers/' + dir + '/' + file + '_controller.js', tpl);
         logger.success(file + ' controller has been created');
-        if (this.isCrud != true) {
+        if (!this.bat) {
             process.exit(0);
         }
     }
 
     crud(params) {
-        this.isCrud = true;
+        this.bat = true;
         this.model(params);
         this.migrate(params);
         this.repository(params);

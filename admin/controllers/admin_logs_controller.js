@@ -2,7 +2,7 @@ const controller = require('../../src/controller');
 const crud = require('../../src/crud');
 const fs = require('fs');
 module.exports = class admin_logs_controller extends controller {
-    crud(req, res) {
+    schema(req, res) {
         let amis = new crud(res);
         amis.show([
             {

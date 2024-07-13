@@ -3,7 +3,7 @@ const config = require('../../src/config');
 const controller = require('../../src/controller');
 const repository = require('../repositories/admin_repository');
 module.exports = class admin_user_controller extends controller {
-    crud(req, res) {
+    schema(req, res) {
         let amis = new crud(req);
         let roles = amis.makeOptions(Object.keys(config('permission.permissions')));
         amis.show([

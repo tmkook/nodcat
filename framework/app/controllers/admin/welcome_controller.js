@@ -2,7 +2,7 @@ const { controller } = require('nodcat');
 module.exports = class welcome_controller extends controller {
     menus(req, res) {
         let isAdmin = req.auth && req.auth.isRole('admin');
-        this.success({
+        res.success({
             "pages": [
                 {
                     "label": "系统",
@@ -21,18 +21,18 @@ module.exports = class welcome_controller extends controller {
                             "children": [
                                 {
                                     "label": "账号管理",
-                                    "url": "/auth/user/crud",
-                                    "schemaApi": req.admin_uri('/auth/user/crud'),
+                                    "url": "/auth/user/schema",
+                                    "schemaApi": req.admin_uri('/auth/user/schema'),
                                 },
                                 {
                                     "label": "系统日志",
-                                    "url": "/auth/logs/crud",
-                                    "schemaApi": req.admin_uri('/auth/logs/crud')
+                                    "url": "/auth/logs/schema",
+                                    "schemaApi": req.admin_uri('/auth/logs/schema')
                                 },
                                 {
                                     "label": "代码生成",
-                                    "url": "/auth/code/crud",
-                                    "schemaApi": req.admin_uri('/auth/code/crud')
+                                    "url": "/auth/code/schema",
+                                    "schemaApi": req.admin_uri('/auth/code/schema')
                                 }
                             ],
                         },
@@ -43,7 +43,7 @@ module.exports = class welcome_controller extends controller {
     }
 
     dashboard(req, res) {
-        this.success({
+        res.success({
             "type": "page",
             "body": {
                 "type": "chart",

@@ -78,9 +78,9 @@ router.post(admin_uri('/auth/user/profile'), function (req, res) {
 });
 
 //user controller
-router.get(admin_uri('/auth/user/crud'), function (req, res) {
+router.get(admin_uri('/auth/user/schema'), function (req, res) {
     let controller = new admin_user_controller(req, res);
-    controller.crud(req, res);
+    controller.schema(req, res);
 });
 
 router.get(admin_uri('/auth/user/:id'), function (req, res) {
@@ -104,9 +104,9 @@ router.delete(admin_uri('/auth/user'), function (req, res) {
 });
 
 //logs controller
-router.get(admin_uri('/auth/logs/crud'), function (req, res) {
+router.get(admin_uri('/auth/logs/schema'), function (req, res) {
     let controller = new admin_logs_controller(req, res);
-    controller.crud(req, res);
+    controller.schema(req, res);
 });
 
 router.get(admin_uri('/auth/logs'), function (req, res) {
@@ -120,9 +120,9 @@ router.delete(admin_uri('/auth/logs'), function (req, res) {
 });
 
 //code controller
-router.get(admin_uri('/auth/code/crud'), function (req, res) {
+router.get(admin_uri('/auth/code/schema'), function (req, res) {
     let controller = new admin_code_controller(req, res);
-    controller.crud(req, res);
+    controller.schema(req, res);
 });
 
 router.post(admin_uri('/auth/code'), function (req, res) {

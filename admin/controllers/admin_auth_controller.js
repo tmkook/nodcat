@@ -26,6 +26,8 @@ module.exports = class admin_auth_controller extends controller {
             let exp = req.body.remember ? 86400 * 30 : 3600;
             req.auth.login(user, exp);
             res.success(user);
+        } else {
+            return user;
         }
     }
 
@@ -35,6 +37,8 @@ module.exports = class admin_auth_controller extends controller {
         if (user) {
             req.auth.login(user, req.auth.user.exp);
             res.success(user);
+        } else {
+            return user;
         }
     }
 }

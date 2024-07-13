@@ -1,23 +1,15 @@
-const { controller } = require('nodcat');
+const { controller, crud } = require('nodcat');
 const repository = require('../../repositories/__filename___repository');
 
 module.exports = class __filename___controller extends controller {
-
-    /**
-     * this.crud 是一个简单的 CRUD JSON 封装返回 amis schemaApi 文档如下
-     * https://aisuda.bce.baidu.com/amis/zh-CN/components/app
-     * 
-     * @param {*} req 
-     * @param {*} res 
-     * 
-     */
     schema(req, res) {
-        let crud = this.getCrudSchema();
-
         /**
-         * 表格显示字段
-         * https://aisuda.bce.baidu.com/amis/zh-CN/components/crud
+         * crud 是一个简单的 amis json 封装，如果你需要个性化可直接返回 amis 配置，文档如下
+         * https://aisuda.bce.baidu.com/amis/zh-CN/components/app
          */
+        let crud = new crud(req);
+
+        // 列表
         crud.show([
             {
                 "name": "id",
@@ -31,10 +23,7 @@ module.exports = class __filename___controller extends controller {
             }
         ]);
 
-        /**
-         * 详情显示字段
-         * https://aisuda.bce.baidu.com/amis/zh-CN/components/crud
-         */
+        // 详情
         crud.detail([
             {
                 "type": "static",
@@ -53,11 +42,7 @@ module.exports = class __filename___controller extends controller {
             },
         ]);
 
-        /**
-         * 新增和修改字段
-         * 也可以分开 create 和 update 单独定义
-         * https://aisuda.bce.baidu.com/amis/zh-CN/components/form/index
-         */
+        // 表单
         crud.createAndUpdate([
             {
                 "type": "input-text",
@@ -67,10 +52,7 @@ module.exports = class __filename___controller extends controller {
             }
         ]);
 
-        /**
-         * 搜索字段
-         * https://aisuda.bce.baidu.com/amis/zh-CN/components/form/index
-         */
+        // 搜索
         crud.filter([
             {
                 "type": "input-text",
@@ -80,12 +62,9 @@ module.exports = class __filename___controller extends controller {
             }
         ]);
 
-        /**
-         * 返回 crud json
-         * console.log(crud.render());
-         * https://aisuda.bce.baidu.com/amis/zh-CN/components/crud
-         */
-        this.success(crud.render());
+        // 返回
+        // console.log(crud.render());
+        res.success(crud.render());
     }
 
     /**
@@ -94,9 +73,9 @@ module.exports = class __filename___controller extends controller {
      * @param {*} res 
      */
     async grid(req, res) {
-        let repo = repository.instance();
+        let repo = new repository;
         let list = await repo.list(req.query);
-        this.success(list);
+        res.success(list);
     }
 
     /**
@@ -105,9 +84,9 @@ module.exports = class __filename___controller extends controller {
      * @param {*} res 
      */
     async detail(req, res) {
-        let repo = repository.instance();
+        let repo = new repository;
         let data = await repo.show(req.params);
-        this.success(data);
+        res.success(data);
     }
 
     /**
@@ -116,17 +95,18 @@ module.exports = class __filename___controller extends controller {
      * @param {*} res 
      */
     async delete(req, res) {
-        let repo = repository.instance();
+        let repo = new repository;
         let ids = await repo.delete(req.query.id);
-        this.success(ids);
+        res.success(ids);
     }
 
     //表单
     async form(req, res) {
+        let repo = new repository;
         if (req.body.id) {
-            this.success(await repository.instance().update(req.body));
+            res.success(await repo.update(req.body));
         } else {
-            this.success(await repository.instance().store(req.body));
+            res.success(await repo.store(req.body));
         }
     }
 }

@@ -1,6 +1,6 @@
 const controller = require('../../src/controller');
 module.exports = class admin_logs_controller extends controller {
-    crud(req, res) {
+    schema(req, res) {
         res.success({
             "type": "form",
             "api": req.admin_uri('/auth/code'),

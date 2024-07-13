@@ -8,6 +8,7 @@ const config = require('../src/config');
 module.exports = new class serve {
 
     install(params) {
+        this.bat = true;
         let to = process.cwd();
         let dir = path.join(__dirname, '../framework/');
         let files = fs.readdirSync(dir);
@@ -17,13 +18,21 @@ module.exports = new class serve {
         }
         this.public(params);
         this.env(params);
+        process.exit(0);
     }
 
     public(params) {
-        fs.symlinkSync(path.join(__dirname, '../admin/storage/sdk'), process.cwd() + '/public/sdk', 'dir');
-        logger.success('sdk has been created');
-        fs.symlinkSync(process.cwd() + '/storage/uploads', process.cwd() + '/public/uploads', 'dir');
-        logger.success('uploads has been created');
+        try {
+            fs.symlinkSync(path.join(__dirname, '../admin/storage/sdk'), process.cwd() + '/public/sdk', 'dir');
+            logger.success('sdk has been created');
+            fs.symlinkSync(process.cwd() + '/storage/uploads', process.cwd() + '/public/uploads', 'dir');
+            logger.success('uploads has been created');
+        } catch (e) {
+            logger.info(e.toString());
+        }
+        if (!this.bat) {
+            process.exit(0);
+        }
     }
 
     list(params) {
@@ -40,23 +49,9 @@ module.exports = new class serve {
                 }
             }
         }
-        process.exit(0);
-    }
-
-    run(params) {
-        //routes
-        require('../admin/routes');
-        require(process.cwd() + '/app/use');
-        require(process.cwd() + '/app/api');
-        require(process.cwd() + '/app/web');
-
-        //listen
-        const host = config('app.host');
-        const port = config('app.port');
-        const protocol = config('app.protocol');
-        router.listen(port, () => {
-            logger.success('server: ' + protocol + '://' + host + ':' + port);
-        });
+        if (!this.bat) {
+            process.exit(0);
+        }
     }
 
     env(params) {
@@ -83,7 +78,9 @@ module.exports = new class serve {
         ];
         fs.writeFileSync(process.cwd() + '/.env', data.join("\r\n"));
         logger.success('.env file has been created');
-        process.exit(0);
+        if (!this.bat) {
+            process.exit(0);
+        }
     }
 
     key(params) {
@@ -102,6 +99,24 @@ module.exports = new class serve {
         }
         fs.writeFileSync(process.cwd() + '/.env', data.join("\r\n"));
         logger.success('.env APP_KEY has benn changed');
-        process.exit(0);
+        if (!this.bat) {
+            process.exit(0);
+        }
+    }
+
+    run(params) {
+        //routes
+        require('../admin/routes');
+        require(process.cwd() + '/app/use');
+        require(process.cwd() + '/app/api');
+        require(process.cwd() + '/app/web');
+
+        //listen
+        const host = config('app.host');
+        const port = config('app.port');
+        const protocol = config('app.protocol');
+        router.listen(port, () => {
+            logger.success('server: ' + protocol + '://' + host + ':' + port);
+        });
     }
 }
