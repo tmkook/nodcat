@@ -33,12 +33,12 @@ module.exports = class __filename___controller extends controller {
             {
                 "type": "static",
                 "name": "created_at",
-                "label": "创建时间"
+                "label": "创建"
             },
             {
                 "type": "static",
                 "name": "updated_at",
-                "label": "更新时间"
+                "label": "更新"
             },
         ]);
 
@@ -97,7 +97,7 @@ module.exports = class __filename___controller extends controller {
         repo.form(req.body).then(data => {
             res.success(data);
         }).catch(e => {
-            res.error(e);
+            res.error(e.toString());
         });
     }
 }

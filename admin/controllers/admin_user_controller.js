@@ -182,11 +182,13 @@ module.exports = class admin_user_controller extends controller {
 
     form(req, res) {
         let repo = new repository;
-        let promis = req.body.id ? repo.update(req.body) : repo.store(req.body);
-        promis.then(data => {
+        if (req.body.password.length > 5) {
+            req.body.password = secret.crypto.MD5(req.body.password).toString();
+        }
+        repo.form(req.body).then(data => {
             res.success(data);
         }).catch(e => {
-            res.error(e.toString());
+            res.error(e);
         });
     }
 }

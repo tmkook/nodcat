@@ -1,5 +1,4 @@
 const secret = require('./secret');
-const config = require('./config');
 const parseid = (dec) => dec ? dec.data : null;
 
 /**
@@ -8,29 +7,38 @@ const parseid = (dec) => dec ? dec.data : null;
  */
 module.exports = class repository {
     model = null;
-    safeid_exp = 86400;
-    key = config('permission.key');
+    safeid_exp = 0;
+    safeid_key = null;
 
     /**
      * 列表
      * @param {json} query 查询参数
      * @param {array} hidden 隐藏字段
+     * @param {json} relationHidden 关联模型隐藏字段
      * @returns 
      */
-    async list(query, hidden = []) {
+    async list(query, hidden = [], relationHidden) {
         if (query.id) {
-            let id = this.safeid_exp ? secret.encrypt(query.id, this.safeid_exp, this.key) : parseInt(query.id);
+            let id = this.safeid_key ? secret.encrypt(query.id, this.safeid_exp, this.safeid_key) : parseInt(query.id);
             this.model.where('id', id);
         }
         let data = await this.model.paginate(query.page || 1, query.perpage || 20);
         if (hidden.length) {
             data.items().makeHidden(hidden);
         }
+        if (relationHidden && Object.keys(relationHidden).length) {
+            let items = data.items().items;
+            for (let i in relationHidden) {
+                for (let o in items) {
+                    items[o][i].makeHidden(relationHidden[i]);
+                }
+            }
+        }
         data = data.toData();
-        if (this.safeid_exp) {
+        if (this.safeid_key) {
             for (let i in data.data) {
                 if (data.data[i].id) {
-                    data.data[i].id = secret.encrypt(data.data[i].id, this.safeid_exp, this.key);
+                    data.data[i].id = secret.encrypt(data.data[i].id, this.safeid_exp, this.safeid_key);
                 }
             }
         }
@@ -52,7 +60,7 @@ module.exports = class repository {
      * @returns 
      */
     async show(id, hidden = []) {
-        let decid = this.safeid_exp ? parseid(secret.decrypt(id, this.key)) : parseInt(id);
+        let decid = this.safeid_key ? parseid(secret.decrypt(id, this.safeid_key)) : parseInt(id);
         let data = await this.model.where('id', decid).firstOrFail();
         if (data && hidden.length) {
             data.makeHidden(hidden);
@@ -82,7 +90,7 @@ module.exports = class repository {
      * @returns 
      */
     async update(post) {
-        post.id = this.safeid_exp ? parseid(secret.decrypt(post.id, this.key)) : parseInt(post.id);
+        post.id = this.safeid_key ? parseid(secret.decrypt(post.id, this.safeid_key)) : parseInt(post.id);
         let item = await this.model.findOrFail(post.id);
         for (let i in post) {
             item[i] = post[i];
@@ -107,8 +115,8 @@ module.exports = class repository {
     async delete(id) {
         let ids = id.split(',');
         for (let i in ids) {
-            if (this.safeid_exp) {
-                ids[i] = parseid(secret.decrypt(ids[i], this.key));
+            if (this.safeid_key) {
+                ids[i] = parseid(secret.decrypt(ids[i], this.safeid_key));
             } else {
                 ids[i] = parseInt(ids[i]);
             }

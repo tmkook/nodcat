@@ -27,7 +27,7 @@ router.engine('html', (file, data, callback) => {
 });
 
 //后台ACL
-const admin_uri = (uri = '') => '/' + options.prefix + uri;
+const admin_uri = (uri = '', prefix) => '/' + (prefix ?? options.prefix) + uri;
 router.all('*', (req, res, next) => {
     req.admin_uri = admin_uri;
     req.auth = new auth(req, res, options);
@@ -44,12 +44,12 @@ router.all('*', (req, res, next) => {
     }
 });
 
-router.admin = function (path, controller) {
-    router.get(admin_uri(path) + '/schema', router.controller(controller, 'schema'));
-    router.get(admin_uri(path) + '/:id', router.controller(controller, 'detail'));
-    router.get(admin_uri(path), router.controller(controller, 'grid'));
-    router.post(admin_uri(path), router.controller(controller, 'form'));
-    router.delete(admin_uri(path), router.controller(controller, 'delete'));
+router.admin = function (path, controller, prefix) {
+    router.get(admin_uri(path, prefix) + '/schema', router.controller(controller, 'schema'));
+    router.get(admin_uri(path, prefix) + '/:id', router.controller(controller, 'detail'));
+    router.get(admin_uri(path, prefix), router.controller(controller, 'grid'));
+    router.post(admin_uri(path, prefix), router.controller(controller, 'form'));
+    router.delete(admin_uri(path, prefix), router.controller(controller, 'delete'));
 }
 
 //自定义路由
@@ -65,6 +65,11 @@ router.get(admin_uri(), function (req, res) {
 router.get(admin_uri('/auth/login'), function (req, res) {
     let controller = new admin_auth_controller(req, res);
     controller.login(req, res);
+});
+
+router.get(admin_uri('/auth/logout'), function (req, res) {
+    let controller = new admin_auth_controller(req, res);
+    controller.logout(req, res);
 });
 
 router.post(admin_uri('/auth/login'), function (req, res) {
