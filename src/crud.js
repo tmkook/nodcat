@@ -8,7 +8,7 @@ module.exports = class crud {
     operation = [];
     prefix = 'admin';
     userinfo = { id: 0, nickname: "guest", roles: "" };
-    permission = { get: false, post: false, delete: false };
+    permission = { get: true, post: true, delete: true };
 
     /**
      * 初始化
