@@ -1,6 +1,4 @@
-"use strict";
 const crypto = require("crypto-js");
-
 /**
  * 安全加密
  */

@@ -1,5 +1,6 @@
 const crud = require('../../src/crud');
 const config = require('../../src/config');
+const secret = require('../../src/secret');
 const controller = require('../../src/controller');
 const repository = require('../repositories/admin_repository');
 module.exports = class admin_user_controller extends controller {

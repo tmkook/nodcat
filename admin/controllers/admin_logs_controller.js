@@ -8,7 +8,6 @@ module.exports = class admin_logs_controller extends controller {
             {
                 "name": "id",
                 "label": "ID",
-                "sortable": true
             },
             {
                 "name": "type",

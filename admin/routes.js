@@ -3,6 +3,7 @@ const auth = require('../src/auth');
 const config = require('../src/config');
 const router = require('../src/router');
 const options = config('permission');
+
 const admin_auth_controller = require('./controllers/admin_auth_controller');
 const admin_user_controller = require('./controllers/admin_user_controller');
 const admin_logs_controller = require('./controllers/admin_logs_controller');
@@ -28,7 +29,7 @@ router.engine('html', (file, data, callback) => {
 
 //后台ACL
 const admin_uri = (uri = '', prefix) => '/' + (prefix ?? options.prefix) + uri;
-router.all('*', (req, res, next) => {
+router.all(admin_uri('*'), (req, res, next) => {
     req.admin_uri = admin_uri;
     req.auth = new auth(req, res, options);
     if (req.auth.can()) {
@@ -134,3 +135,19 @@ router.post(admin_uri('/auth/code'), function (req, res) {
     let controller = new admin_code_controller(req, res);
     controller.form(req, res);
 });
+
+/**
+ * 加载定时器
+ */
+(function () {
+    let dir = process.cwd() + '/app/schedules/';
+    let files = fs.readdirSync(dir);
+    for (let i in files) {
+        if (files[i].indexOf('.js') > 0) {
+            let obj = require(dir + files[i]);
+            if (obj.interval) {
+                setInterval(obj.handle, obj.interval);
+            }
+        }
+    }
+})();

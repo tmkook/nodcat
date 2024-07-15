@@ -71,7 +71,7 @@ module.exports = class __filename___controller extends controller {
             res.success(list);
         }).catch(e => {
             res.error(e.toString());
-        })
+        });
     }
 
     detail(req, res) {

@@ -1,4 +1,3 @@
-"use strict";
 const { sutando } = require('sutando');
 module.exports = function (config, logger) {
     //connection

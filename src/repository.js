@@ -1,6 +1,5 @@
 const secret = require('./secret');
 const parseid = (dec) => dec ? dec.data : null;
-
 /**
  * 后台数据仓库基类
  * 提供简单的 CRUD 接口

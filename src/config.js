@@ -1,6 +1,5 @@
 let conf = null;
 const fs = require("fs");
-
 /**
  * 获取配置
  * @param {string} key 

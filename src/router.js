@@ -1,6 +1,3 @@
-"use strict";
-const logger = require('./logger');
-
 /**
  * 路由
  * @returns express
@@ -23,28 +20,14 @@ module.exports = (function router() {
      * @returns 
      */
     router.controller = function (file, action) {
-        return async (req, res) => {
-            try {
-                let classname = require(process.cwd() + '/app/controllers/' + file);
-                let controller = new classname(req, res);
-                if (controller[action]) {
-                    if (controller.jwt && controller.permission) {
-                        controller.permission();
-                    }
-                    let promis = controller[action](req, res);
-                    if (promis && promis.then) {
-                        await promis;
-                    }
-                } else {
-                    res.status(404).send('404 not found');
-                }
-            } catch (e) {
-                logger.error(e);
-                let debug = process.env.APP_DEBUG ?? 'true';
-                let msg = debug == 'true' ? e.toString() : 'server error';
-                res.status(500).send(msg);
+        return (req, res) => {
+            let classname = require(process.cwd() + '/app/controllers/' + file);
+            let controller = new classname(req, res);
+            if (controller[action]) {
+                controller[action](req, res);
+            } else {
+                res.status(404).send('404 not found');
             }
-            return Promise.resolve(true);
         }
     }
 
