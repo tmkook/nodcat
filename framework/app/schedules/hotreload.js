@@ -6,7 +6,15 @@
  * https://www.expressjs.com.cn/5x/api.html#app
  *
  */
+const { config } = require('nodcat');
 module.exports = new class hotreload {
+
+    /**
+     * 定时器间隔时长(毫秒)
+     * 0 为不执行
+     */
+    interval = config('app.debug') ? 5000 : 0;
+
     /**
      * 执行体
      */

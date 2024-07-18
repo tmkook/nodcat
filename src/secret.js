@@ -93,10 +93,20 @@ module.exports = new class secure {
      * 验证签名
      * @param {json} query 
      * @param {string} key 
+     * @param {integer} exp 
      * @returns 
      */
-    issign(query, key) {
-        let sign = query.sign;
-        return sign == this.sign(query, key);
+    issign(query, key, exp) {
+        let verf = this.sign(query, key);
+        if (query.sign == verf.sign) {
+            let now = parseInt((new Date).getTime() / 1000);
+            if (exp > 0) {
+                return now - query.ts < exp;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
     }
 }
