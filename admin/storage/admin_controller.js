@@ -31,12 +31,12 @@ module.exports = class __filename___controller extends controller {
                 "label": "ID"
             },
             {
-                "type": "static",
+                "type": "static-datetime",
                 "name": "created_at",
                 "label": "创建"
             },
             {
-                "type": "static",
+                "type": "static-datetime",
                 "name": "updated_at",
                 "label": "更新"
             },
@@ -48,7 +48,7 @@ module.exports = class __filename___controller extends controller {
                 "type": "input-text",
                 "name": "id",
                 "label": "ID",
-                "required": true
+                "visible": false
             }
         ]);
 
@@ -58,7 +58,6 @@ module.exports = class __filename___controller extends controller {
                 "type": "input-text",
                 "name": "id",
                 "label": "ID",
-                "required": true
             }
         ]);
 

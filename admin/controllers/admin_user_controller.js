@@ -9,6 +9,10 @@ module.exports = class admin_user_controller extends controller {
         let roles = amis.makeOptions(Object.keys(config('permission.permissions')));
         amis.show([
             {
+                "name": "id",
+                "label": "ID",
+            },
+            {
                 "name": "username",
                 "label": "账号",
             },
@@ -43,6 +47,11 @@ module.exports = class admin_user_controller extends controller {
 
         //详情
         amis.detail([
+            {
+                "type": "static",
+                "name": "id",
+                "label": "ID"
+            },
             {
                 "type": "static",
                 "name": "username",
@@ -86,7 +95,6 @@ module.exports = class admin_user_controller extends controller {
                 "type": "input-text",
                 "name": "id",
                 "label": "ID",
-                "required": true,
                 "visible": false
             },
             {
@@ -156,6 +164,12 @@ module.exports = class admin_user_controller extends controller {
 
     grid(req, res) {
         let repo = new repository;
+        if (req.query.username != '') {
+            repo.model.where('username', req.query.username);
+        }
+        if (req.query.status != '') {
+            repo.model.where('status', req.query.status);
+        }
         repo.list(req.query, ['password']).then(data => {
             res.success(data);
         }).catch(e => {
@@ -165,7 +179,7 @@ module.exports = class admin_user_controller extends controller {
 
     detail(req, res) {
         let repo = new repository;
-        repo.show(req.params.id).then(data => {
+        repo.show(req.params.id, ['password']).then(data => {
             res.success(data);
         }).catch(e => {
             res.error(e);

@@ -37,6 +37,15 @@ module.exports = class controller {
             res.status(200).json({ status: 1, msg: msg });
         }
 
+        /**
+         * 
+         * @param {integer} code 
+         */
+        res.abort = function (code) {
+            res.status(code ?? 500).send();
+            process.abort();
+        }
+
         this.req = req;
         this.res = res;
     }

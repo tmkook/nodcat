@@ -6,8 +6,8 @@ module.exports = new class migration {
             table.increments('id');
             table.string('avatar').nullable();
             table.string('username', 32).unique();
-            table.string('nickname').nullable();
-            table.string('password').nullable();
+            table.string('nickname', 32).nullable();
+            table.string('password', 32).nullable();
             table.string('roles').nullable();
             table.tinyint('risked').nullable().default(0); //登录风控次数，登录失败5次以上禁止24小时
             table.tinyint('status').nullable().default(1); //账号状态，禁用将不允许登录

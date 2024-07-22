@@ -146,7 +146,9 @@ router.post(admin_uri('/auth/code'), function (req, res) {
         if (files[i].indexOf('.js') > 0) {
             let obj = require(dir + files[i]);
             if (obj.interval) {
-                setInterval(obj.handle, obj.interval);
+                setInterval(function () {
+                    obj.handle();
+                }, obj.interval);
             }
         }
     }
