@@ -41,9 +41,8 @@ module.exports = class controller {
          * 
          * @param {integer} code 
          */
-        res.abort = function (code) {
-            res.status(code ?? 500).send();
-            process.abort();
+        res.abort = function (code, msg) {
+            res.status(code ?? 500).send(msg ?? '');
         }
 
         this.req = req;
