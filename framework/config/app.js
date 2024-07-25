@@ -10,5 +10,5 @@ module.exports = {
     host: process.env.HOST ?? 'localhost',
     protocol: process.env.PROTOCOL ?? 'http',
     asset_url: process.env.ASSET_URL ?? '/',
-    timezone: process.env.TIMEZONE ?? 'Asia/Shanghai',
+    timezone: process.env.TZ ?? 'Asia/Shanghai',
 }
