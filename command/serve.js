@@ -67,7 +67,7 @@ module.exports = new class serve {
             'HOST=localhost',
             'PROTOCOL=http',
             'ASSET_URL=/',
-            'TIMEZONE=Asia/Shanghai',
+            'TZ=Asia/Shanghai',
             '',
             'DB_CLIENT=mysql2',
             'DB_HOST=127.0.0.1',
