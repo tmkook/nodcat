@@ -32,7 +32,7 @@ module.exports = new class secure {
      * @returns 
      */
     encrypt(data, exp, key) {
-        let sign = JSON.stringify({ est: parseInt(((new Date).getTime()) / 1000), exp: exp, data: data });
+        let sign = JSON.stringify({ est: parseInt(Date.now() / 1000), exp: exp, data: data });
         sign = crypto.enc.Base64url.stringify(crypto.enc.Utf8.parse(crypto.AES.encrypt(sign, key).toString()));
         return sign;
     }
@@ -51,7 +51,7 @@ module.exports = new class secure {
                 if (dec) {
                     let ret = JSON.parse(dec);
                     if (ret.exp) {
-                        let now = parseInt(((new Date).getTime()) / 1000);
+                        let now = parseInt(Date.now() / 1000);
                         return now - ret.est > ret.exp ? null : ret;
                     } else {
                         return ret;
