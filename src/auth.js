@@ -59,7 +59,7 @@ module.exports = class auth {
      * 清除登录
      */
     logout() {
-        this.res.cookie(this.options.cookie_name, '', { maxAge: 0 });
+        this.res.cookie(this.options.cookie_name, '', { maxAge: 0, path: '/' + this.options.prefix });
     }
 
     /**

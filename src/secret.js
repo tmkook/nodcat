@@ -74,19 +74,12 @@ module.exports = new class secure {
      */
     sign(query, key) {
         let list = [];
-        if (!query.ts) {
-            query.ts = parseInt((new Date).getTime() / 1000);
-        }
-        if (query.sign) {
-            delete query.sign;
-        }
         let keys = Object.keys(query).sort();
         for (let i in keys) {
             list.push(keys[i] + '=' + decodeURIComponent(query[keys[i]]));
         }
         let str = list.join('&');
-        query.sign = crypto.MD5(str + '&' + key).toString();
-        return query;
+        return crypto.MD5(str + '&' + key).toString();
     }
 
     /**
@@ -96,11 +89,11 @@ module.exports = new class secure {
      * @param {integer} exp 
      * @returns 
      */
-    issign(query, key, exp) {
+    issign(query, sign, key, exp) {
         let verf = this.sign(query, key);
-        if (query.sign == verf.sign) {
-            let now = parseInt((new Date).getTime() / 1000);
+        if (sign == verf) {
             if (exp > 0) {
+                let now = parseInt(Date.now() / 1000);
                 return now - query.ts < exp;
             } else {
                 return true;
