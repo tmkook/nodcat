@@ -25,11 +25,7 @@ module.exports = class admin_logs_controller extends controller {
         let cmd = req.body.cmd.trim();
         let shell = require('child_process');
         shell.exec(cmd, { cwd: process.cwd() }, (err, stdout, stderr) => {
-            if (stderr) {
-                res.error(stderr.trim());
-            } else {
-                res.success(true, stdout.trim());
-            }
+            res.success(true, stdout.trim());
         });
     }
 }

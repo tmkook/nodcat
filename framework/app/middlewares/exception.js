@@ -12,19 +12,19 @@ module.exports = new class exception {
      * 执行体
      */
     handle(req, res, next) {
-        function unhandledRejection(reason) {
-            let msg = 'UnhandledRejection:' + reason.toString();
+        function unhandledRejection(err) {
+            let msg = 'UnhandledRejection:' + err.toString() + "\n" + (err.stack ?? '');
             if (msg.indexOf('ModelNotFoundError') > 0) {
                 res.status(404).send();
             } else {
-                res.status(500).send(config('app.debug') ? msg : 'server error');
+                res.status(500).send(err.toString());
             }
-            console.log(reason);
+            console.log(err);
             logger.write(msg);
         }
         function uncaughtException(err) {
-            let msg = 'uncaughtException:' + err.toString();
-            res.status(500).send(config('app.debug') ? msg : 'server error');
+            let msg = 'uncaughtException:' + err.message + "\n" + (err.stack ?? '');
+            res.status(500).send(err.toString());
             console.log(err);
             logger.write(msg);
         }
