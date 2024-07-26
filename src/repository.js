@@ -29,7 +29,9 @@ module.exports = class repository {
             let items = data.items().items;
             for (let i in relationHidden) {
                 for (let o in items) {
-                    items[o][i].makeHidden(relationHidden[i]);
+                    if (items[o][i]) {
+                        items[o][i].makeHidden(relationHidden[i]);
+                    }
                 }
             }
         }
